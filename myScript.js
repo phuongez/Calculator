@@ -99,6 +99,20 @@ decimalButton.addEventListener('click', () => {
     }
 });
 
+const percenButton = document.querySelector('#percentage')
+percenButton.addEventListener('click', () => {
+    if (isCalculationComplete) {
+        topDisplay.textContent = '';
+        bottomDisplay.textContent += '%';
+        isCalculationComplete = false; // Reset cờ sau khi nhập mới
+    } else {
+        // Kiểm tra nếu chưa có dấu "%" nào trước đó
+        if (!bottomDisplay.textContent.includes("%")) {
+            bottomDisplay.textContent += "%";
+        }
+    }
+});
+
 const equalButton = document.querySelector('#equal');
 equalButton.addEventListener('click', executingMath);
 
@@ -146,10 +160,20 @@ function executingMath() {
     // Kiểm tra nếu chuỗi bắt đầu bằng dấu "-" để xử lý số âm
     if (bottomDisplay.textContent.trim().at(0) === '-') {
         // Cắt bỏ ký tự đầu "-" và tách các thành phần
-        operation = bottomDisplay.textContent.slice(1).match(/(\d+\.\d+|\d+|[+\-*x/])/g);
-        const number1 = -parseFloat(operation[0]);
+        let number1;
+        let number2;
+        operation = bottomDisplay.textContent.slice(1).match(/(\d+\.\d+%?|\d+%?|[+\-*x/])/g);
+        if (operation[0].includes('%')) {
+            number1 = -parseFloat(operation[0].slice(0, -1)) / 100;
+        } else {
+            number1 = -parseFloat(operation[0]);
+        }
         const operator = operation[1];
-        const number2 = parseFloat(operation[2]);
+        if (operation[2].includes('%')) {
+            number2 = parseFloat(operation[2].slice(0, -1)) / 100;
+        } else {
+            number2 = parseFloat(operation[2]);
+        }
 
         // Xác minh rằng các số và toán tử hợp lệ
         if (!isNaN(number1) && operator && !isNaN(number2)) {
@@ -158,10 +182,20 @@ function executingMath() {
         }
     } else {
         // Tách các thành phần cho biểu thức không âm
-        operation = bottomDisplay.textContent.match(/(\d+\.\d+|\d+|[+\-*x/])/g);
-        const number1 = parseFloat(operation[0]);
+        let number1;
+        let number2
+        operation = bottomDisplay.textContent.match(/(\d+\.\d+%?|\d+%?|[+\-*x/])/g);
+        if (operation[0].includes('%')) {
+            number1 = parseFloat(operation[0].slice(0, -1)) / 100;
+        } else {
+            number1 = parseFloat(operation[0]);
+        }
         const operator = operation[1];
-        const number2 = parseFloat(operation[2]);
+        if (operation[2].includes('%')) {
+            number2 = parseFloat(operation[2].slice(0, -1)) / 100;
+        } else {
+            number2 = parseFloat(operation[2]);
+        }
 
         // Xác minh rằng các số và toán tử hợp lệ
         if (!isNaN(number1) && operator && !isNaN(number2)) {
