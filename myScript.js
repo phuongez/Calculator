@@ -69,6 +69,21 @@ multiplyButton.addEventListener('click', () =>  {
     }
 })
 
+const divideButton = document.querySelector('#divide')
+divideButton.addEventListener('click', () =>  {
+    // If calculation is complete, start with the result and append the new operator
+    if (isCalculationComplete) {
+        isCalculationComplete = false;  // reset flag for new operation
+        bottomDisplay.textContent += '/';
+    } else if (/[x+\-*/]/.test(bottomDisplay.textContent)) {
+        executingMath(); // Complete the current operation first if an operator exists
+        bottomDisplay.textContent += '/';
+        isCalculationComplete = false;
+    } else {
+        bottomDisplay.textContent += '/';
+    }
+})
+
 const equalButton = document.querySelector('#equal');
 equalButton.addEventListener('click', executingMath);
 
@@ -90,19 +105,24 @@ function divide (a,b) {
 }
 
 function operate(number1,operator,number2) {
+    let result;
     switch(operator) {
         case '+':
-            return add(number1, number2);
+            result = add(number1, number2);
         case '-':
-            return subtract(number1, number2);
+            result = subtract(number1, number2);
         case 'x':
         case '*':
-            return multiply(number1, number2);
+            result = multiply(number1, number2);
         case '/':
-            return divide(number1, number2);
+            if (number2 === 0) {
+                return "Error"; // Handle divide by zero case
+            }
+            result = divide(number1, number2);
         default:
             throw new Error("Invalid operator");                
     }
+    return Math.round(result * 100) / 100;
 }
 
 function executingMath() {
