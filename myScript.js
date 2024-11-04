@@ -113,6 +113,27 @@ percenButton.addEventListener('click', () => {
     }
 });
 
+const backButton = document.querySelector('#backSpace')
+backButton.addEventListener('click', () => {
+    bottomDisplay.textContent = bottomDisplay.textContent.slice(0,-1);
+})
+
+const plusMinusButton = document.querySelector('#plusMinus');
+plusMinusButton.addEventListener('click', () => {
+    // Lấy giá trị hiện tại trong bottomDisplay
+    let currentValue = bottomDisplay.textContent;
+
+    // Kiểm tra nếu có số hợp lệ để chuyển đổi dấu
+    if (currentValue !== "" && currentValue !== "0") {
+        // Chuyển đổi dấu
+        if (currentValue.startsWith('-')) {
+            bottomDisplay.textContent = currentValue.slice(1); // Loại bỏ dấu trừ
+        } else {
+            bottomDisplay.textContent = '-' + currentValue; // Thêm dấu trừ
+        }
+    }
+});
+
 const equalButton = document.querySelector('#equal');
 equalButton.addEventListener('click', executingMath);
 

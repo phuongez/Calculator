@@ -6,11 +6,15 @@
 
 .container {
     display: flex;
+    background-image: url(./table_top.jpeg);
+    background-repeat: no-repeat;
+    background-size: 150%;
     justify-content: center;
     align-items: center;
 }
 
 .calculator {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -18,7 +22,9 @@
     height: 590px;
     border-radius: 20px;
     padding: 20px;
-    background-color: gray;
+    background-color: rgb(59, 59, 59);
+    margin: 200px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .screen {
