@@ -84,6 +84,21 @@ divideButton.addEventListener('click', () =>  {
     }
 })
 
+const decimalButton = document.querySelector('#decimal');
+decimalButton.addEventListener('click', () => {
+    // Nếu vừa thực hiện phép tính, bắt đầu lại với "0."
+    if (isCalculationComplete || bottomDisplay.textContent== '') {
+        topDisplay.textContent = '';
+        bottomDisplay.textContent = "0.";
+        isCalculationComplete = false; // Reset cờ sau khi nhập mới
+    } else {
+        // Kiểm tra nếu chưa có dấu "." nào trước đó
+        if (!bottomDisplay.textContent.includes(".")) {
+            bottomDisplay.textContent += ".";
+        }
+    }
+});
+
 const equalButton = document.querySelector('#equal');
 equalButton.addEventListener('click', executingMath);
 
@@ -108,51 +123,51 @@ function operate(number1,operator,number2) {
     let result;
     switch(operator) {
         case '+':
-            result = add(number1, number2);
+            return add(number1, number2);
         case '-':
-            result = subtract(number1, number2);
+            return subtract(number1, number2);
         case 'x':
         case '*':
-            result = multiply(number1, number2);
+            return multiply(number1, number2);
         case '/':
             if (number2 === 0) {
                 return "Error"; // Handle divide by zero case
             }
-            result = divide(number1, number2);
+            return Math.round(divide(number1, number2)*100)/100;
         default:
             throw new Error("Invalid operator");                
     }
-    return Math.round(result * 100) / 100;
 }
 
 function executingMath() {
     topDisplay.textContent = bottomDisplay.textContent;
     let operation;
 
-    // Check if the first character is "-" to handle negative numbers
+    // Kiểm tra nếu chuỗi bắt đầu bằng dấu "-" để xử lý số âm
     if (bottomDisplay.textContent.trim().at(0) === '-') {
-        // Adjust parsing for negative numbers
-        operation = bottomDisplay.textContent.slice(1).replace(/\s+/g, '').split(/(\D)/).filter(Boolean);
+        // Cắt bỏ ký tự đầu "-" và tách các thành phần
+        operation = bottomDisplay.textContent.slice(1).match(/(\d+\.\d+|\d+|[+\-*x/])/g);
         const number1 = -parseFloat(operation[0]);
         const operator = operation[1];
         const number2 = parseFloat(operation[2]);
 
-        // Verify that parsed numbers and operator are valid
+        // Xác minh rằng các số và toán tử hợp lệ
         if (!isNaN(number1) && operator && !isNaN(number2)) {
             bottomDisplay.textContent = operate(number1, operator, number2);
             isCalculationComplete = true;
         }
     } else {
-        // Parsing for regular (non-negative) numbers
-        operation = bottomDisplay.textContent.replace(/\s+/g, '').split(/(\D)/).filter(Boolean);
+        // Tách các thành phần cho biểu thức không âm
+        operation = bottomDisplay.textContent.match(/(\d+\.\d+|\d+|[+\-*x/])/g);
         const number1 = parseFloat(operation[0]);
         const operator = operation[1];
         const number2 = parseFloat(operation[2]);
 
-        // Verify that parsed numbers and operator are valid
+        // Xác minh rằng các số và toán tử hợp lệ
         if (!isNaN(number1) && operator && !isNaN(number2)) {
             bottomDisplay.textContent = operate(number1, operator, number2);
             isCalculationComplete = true;
         }
     }
 }
+
